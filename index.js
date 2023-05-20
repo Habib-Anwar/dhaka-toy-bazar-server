@@ -32,6 +32,7 @@ async function run() {
     await client.connect();
 
     const bazarCollection = client.db('dhakaToy').collection('bazar');
+    const addingToyCollection = client.db('dhakaToy').collection('addingToy')
 
     app.get('/bazar', async(req, res)=>{
         const cursor = bazarCollection.find();
@@ -44,9 +45,16 @@ async function run() {
         const query = { _id: new ObjectId(id)}
 
         const options = {
-            projection: { name:1, price: 1, picture:1},
+            projection: { name:1, price: 1, picture:1, category:1, details:1},
         };
         const result = await bazarCollection.findOne(query, options);
+        res.send(result);
+    })
+
+    app.post('/addingToy', async(req, res) =>{
+        const adding = req.body;
+        console.log(adding);
+        const result = await addingToyCollection.insertOne(adding);
         res.send(result);
     })
 
